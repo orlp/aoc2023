@@ -1,8 +1,5 @@
 use anyhow::{Ok, Result};
 use aoc2023::OptionSomeExt;
-use itertools::Itertools;
-use regex::Regex;
-use std::collections::HashMap;
 
 const ENGLISH_NUMBERS: [&'static str; 10] = [
     "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
@@ -12,27 +9,21 @@ fn main() -> Result<()> {
     let input = std::fs::read_to_string("inputs/day01.txt")?;
     let start = std::time::Instant::now();
 
-    let values: HashMap<_, _> = ENGLISH_NUMBERS
-        .iter()
-        .enumerate()
-        .map(|(i, w)| (w.to_string(), i as i64))
-        .chain((0..10).map(|d| (d.to_string(), d)))
-        .collect();
-
-    let first_re = Regex::new(&format!("({}).*$", values.keys().join("|")))?;
-    let last_re = Regex::new(&format!("^.*({})", values.keys().join("|")))?;
-
     let mut part1 = 0;
     let mut part2 = 0;
     for l in input.lines() {
         let bytes = l.as_bytes();
-        let first_digit = bytes.iter().position(u8::is_ascii_digit).some()?;
-        let last_digit = bytes.iter().rposition(u8::is_ascii_digit).some()?;
-        part1 += ((bytes[first_digit] - b'0') * 10 + (bytes[last_digit] - b'0')) as i64;
+        let first_idx = bytes.iter().position(u8::is_ascii_digit).some()?;
+        let last_idx = bytes.iter().rposition(u8::is_ascii_digit).some()?;
+        let first_digit = usize::from(bytes[first_idx] - b'0');
+        let last_digit = usize::from(bytes[last_idx] - b'0');
+        part1 += first_digit * 10 + last_digit;
 
-        let [first_word] = first_re.captures(l).some()?.extract().1;
-        let [last_word] = last_re.captures(l).some()?.extract().1;
-        part2 += values[first_word] * 10 + values[last_word];
+        let start_val = |s: &str| ENGLISH_NUMBERS.iter().position(|w| s.starts_with(w));
+        let end_val = |s: &str| ENGLISH_NUMBERS.iter().position(|w| s.ends_with(w));
+        let first_word = (0..first_idx).find_map(|i| start_val(&l[i..first_idx]));
+        let last_word = (0..l.len() - last_idx).find_map(|i| end_val(&l[last_idx..l.len() - i]));
+        part2 += first_word.unwrap_or(first_digit) * 10 + last_word.unwrap_or(last_digit);
     }
 
     println!("part1: {part1}");
