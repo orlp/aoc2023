@@ -1,8 +1,8 @@
 use anyhow::{Ok, Result};
 use aoc2023::OptionSomeExt;
 
-const ENGLISH_NUMBERS: [&'static str; 10] = [
-    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+const ENGLISH_NUMBERS: [&'static str; 9] = [
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
 ];
 
 fn main() -> Result<()> {
@@ -23,7 +23,8 @@ fn main() -> Result<()> {
         let end_val = |s: &str| ENGLISH_NUMBERS.iter().position(|w| s.ends_with(w));
         let first_word = (0..first_idx).find_map(|i| start_val(&l[i..first_idx]));
         let last_word = (0..l.len() - last_idx).find_map(|i| end_val(&l[last_idx..l.len() - i]));
-        part2 += first_word.unwrap_or(first_digit) * 10 + last_word.unwrap_or(last_digit);
+        part2 += first_word.map(|w| w + 1).unwrap_or(first_digit) * 10
+            + last_word.map(|w| w + 1).unwrap_or(last_digit);
     }
 
     println!("part1: {part1}");
