@@ -1,0 +1,18 @@
+[package]
+name = "aoc2023"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1"
+itertools = "0.12"
+bytemuck = "1"
+hashbrown = "0.14"
+rand = "0.8"
+regex = "1.10"
+
+[profile.dev]
+opt-level = 3
+
+[profile.release]
+lto = "thin"
