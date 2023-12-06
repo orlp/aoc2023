@@ -1,7 +1,6 @@
 use core::panic::Location;
 use std::fmt;
 
-
 #[derive(Debug)]
 pub struct NoneError {
     location: &'static Location<'static>,

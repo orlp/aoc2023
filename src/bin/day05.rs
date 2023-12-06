@@ -6,7 +6,9 @@ fn min_location_rec(mut range: (i64, i64), maps: &[Vec<(i64, i64, i64)>]) -> i64
     if range.0 >= range.1 {
         return i64::MAX;
     }
-    let Some(map) = maps.first() else { return range.0 };
+    let Some(map) = maps.first() else {
+        return range.0;
+    };
 
     let mut bound = i64::MAX;
     for (dst, src, len) in map.iter().copied() {

@@ -1,8 +1,9 @@
+use std::collections::VecDeque;
+
 use anyhow::{Ok, Result};
 use aoc2023::OptionSomeExt;
 use hashbrown::HashSet;
 use itertools::{process_results, Itertools};
-use std::collections::VecDeque;
 
 fn main() -> Result<()> {
     let input = std::fs::read_to_string("inputs/day04.txt")?;
